@@ -5,6 +5,7 @@ using namespace std;
 int triple_det(vector<vector<int>> &a);
 vector<vector<int>> get_lower_det(vector<vector<int>> a, int row, int column);
 int get_det_result(vector<vector<int>> a);
+void show_det(vector<vector<int>> &a);
 int main()
 {
 	int line;
@@ -58,9 +59,17 @@ vector<vector<int>> get_lower_det(vector<vector<int>> a, int row, int column)
 		{
 			dett[j][i] = a[j][i];
 		}
+		for (int i = column + 1; i < a.size(); i++)
+		{
+			dett[j][i - 1] = a[j][i];
+		}
 	}
 	for (int j = row + 1; j < a.size(); j++)
 	{
+		for (int i = 0; i < column; i++)
+		{
+			dett[j - 1][i] = a[j][i];
+		}
 		for (int i = column + 1; i < a.size(); i++)
 		{
 			dett[j - 1][i - 1] = a[j][i];
@@ -73,13 +82,28 @@ int get_det_result(vector<vector<int>> a)
 	int total = 0;
 	for (int j = 0; j < a.size(); j++)
 	{
-		for (int i = 0; i < a.size(); i++)
+		int time = pow((-1.0), 0 + j) * a[0][j];
+		vector<vector<int>> lower = get_lower_det(a, 0, j);
+		if (lower.size() == 3)
 		{
-			int time = pow((-1.0), i + j) * a[j][i];
-			vector<vector<int>> lower = get_lower_det(a, j, i);
-			if(lower.size() == 3)
-				total += triple_det(lower) * time * get_det_result(a);
+			total += time * triple_det(lower);
+		}
+		else
+		{
+			int sum = time * get_det_result(lower);
+			total += sum;
 		}
 	}
 	return total;
+}
+void show_det(vector<vector<int>> &a)
+{
+	for (int j = 0; j < a.size(); j++)
+	{
+		for (int i = 0; i < a.size(); i++)
+		{
+			cout << a[j][i] << " ";
+		}
+		cout << endl;
+	}
 }
